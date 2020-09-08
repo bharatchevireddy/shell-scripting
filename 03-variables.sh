@@ -14,3 +14,14 @@ d=0.0.1 # Float
 
 
 echo $a
+
+# Some times you may need to store multiple values in a single variable.
+# In shell we call it as array, In some scripting languages this is called as a list.
+
+ARRAY=(1,2,abc,20,0.0.1)
+
+# Single Array can hold multiple daata types, Ofcourse in shell everything is a string.
+
+# How to access a particular value
+
+echo INDEX0 = ${ARRAY[0]}
