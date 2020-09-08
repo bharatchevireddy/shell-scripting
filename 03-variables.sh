@@ -25,3 +25,11 @@ ARRAY=(1 2 abc 20 0.0.1)
 # How to access a particular value
 
 echo INDEX0 = ${ARRAY[0]}
+
+# Since we are accessing arrays with INDEX, In shell we call this as Index Arrays.
+
+# Alternate to that your array can be accessed with NAME as well, that becomes Named Arrays & in other scripting languages we call it as MAP
+
+MYMAP=( [course]=DevOps [time]=0730 [zone]=IST )
+
+echo "Welcome to ${MYMAP[course]} Training, Timing is ${MYMAP[time]} ${MYMAP[zone]}"
