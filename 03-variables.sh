@@ -20,7 +20,7 @@ echo $a
 
 ARRAY=(1 2 abc 20 0.0.1)
 
-# Single Array can hold multiple daata types, Ofcourse in shell everything is a string.
+# Single Array can hold multiple data types, Ofcourse in shell everything is a string.
 
 # How to access a particular value
 
@@ -33,3 +33,12 @@ echo INDEX0 = ${ARRAY[0]}
 declare -A MYMAP=( [course]=DevOps [time]=0730 [zone]=IST )
 
 echo "Welcome to ${MYMAP[course]} Training, Timing is ${MYMAP[time]} ${MYMAP[zone]}"
+
+# Variables names can contain, NUMBERS, CHARACTERS & _ (Underscore). You cannot use special character like *,?: and so on
+# Also variable cannot start with a number, 1a is wrong, a1 is right variable
+
+# Most of the times we need the data while running the script.
+# We can execute a command and that command output can be stored in a variable.
+
+DATE=$(date +%F)
+echo -e "Welcome to DevOps Training, Today date is $DATE"
