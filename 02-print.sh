@@ -24,15 +24,17 @@ echo -e "Welcome to DevOps Training\n\tTopic is Shell Scripting"
 ## Color Codes
 # 1 - bold
 # 4 - underlined
-# 31 - red
-# 32 - green
-# 33 - yellow
-# 34 - blue
-# 35 - magenta
-# 36 - cyan
+# 31,41 - red
+# 32,42 - green
+# 33,43 - yellow
+# 34,44 - blue
+# 35,45 - magenta
+# 36,46 - cyan
 
 echo -e "\e[1mHello World in Bold text\e[0m"
 echo -e "\e[4mHello World in Underlined text\e[0m"
 
 echo -e "\e[31mHello World in Red Color\e[0m"
 echo -e "Yellow Color, But only \e[33mYellow\e[0m word is Yellow color "
+
+echo -e "\e[42mGreen Background\e[0m"
