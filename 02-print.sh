@@ -38,3 +38,8 @@ echo -e "\e[31mHello World in Red Color\e[0m"
 echo -e "Yellow Color, But only \e[33mYellow\e[0m word is Yellow color "
 
 echo -e "\e[42mGreen Background\e[0m"
+
+## Combinations
+
+echo -e "\e[1;33mBold Yellow\e[0m"
+echo -e "\e[42;31;4mRed On Green with underlined\e[0m"
