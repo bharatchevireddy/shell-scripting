@@ -42,4 +42,4 @@ echo -e "\e[42mGreen Background\e[0m"
 ## Combinations
 
 echo -e "\e[1;33mBold Yellow\e[0m"
-echo -e "\e[31;43;4mRed On Green with underlined\e[0m"
+echo -e "\e[31;43;4mRed On Yellow with underlined\e[0m"
