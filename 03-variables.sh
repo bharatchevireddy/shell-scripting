@@ -42,3 +42,9 @@ echo "Welcome to ${MYMAP[course]} Training, Timing is ${MYMAP[time]} ${MYMAP[zon
 
 DATE=$(date +%F)
 echo -e "Welcome to DevOps Training, Today date is $DATE"
+
+# One more dynamic variables can be done by using Arithematic expressions
+
+VALUE=$((20+203-4*2/6))
+
+echo VALUE = $VALUE
