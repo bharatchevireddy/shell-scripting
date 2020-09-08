@@ -33,3 +33,6 @@ echo -e "Welcome to DevOps Training\n\tTopic is Shell Scripting"
 
 echo -e "\e[1mHello World in Bold text\e[0m"
 echo -e "\e[4mHello World in Underlined text\e[0m"
+
+echo -e "\e[31mHello World in Red Color\e[0m"
+echo -e "Yellow Color, But only \e[33mYellow\e[0m word is Yellow color "
