@@ -30,6 +30,6 @@ echo INDEX0 = ${ARRAY[0]}
 
 # Alternate to that your array can be accessed with NAME as well, that becomes Named Arrays & in other scripting languages we call it as MAP
 
-MYMAP=( [course]=DevOps [time]=0730 [zone]=IST )
+declare -A MYMAP=( [course]=DevOps [time]=0730 [zone]=IST )
 
 echo "Welcome to ${MYMAP[course]} Training, Timing is ${MYMAP[time]} ${MYMAP[zone]}"
