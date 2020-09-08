@@ -14,5 +14,6 @@ echo "Hello $name, Welcome to DevOps Training"
 ## Some Variables can help you in talking the input which are provided as arguments before executing.
 # Variables for this are $0-$n , $* , $@ , $#
 
-echo $0
-echo $1
+echo Script Name = $0
+echo First Argument = $1
+echo Second Argument = $2
