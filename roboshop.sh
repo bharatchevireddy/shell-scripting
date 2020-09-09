@@ -8,6 +8,7 @@ case $USER_ID in
   ;;
   *)
     echo "You should be a root user to perform this script"
+    exit 
     ;;
 esac
 
