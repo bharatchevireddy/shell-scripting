@@ -17,7 +17,7 @@ esac
 Status_Check() {
   case $? in
     0)
-      echo SUCCESS
+      echo -e "\e[1;32mSUCCESS\e[0m"
       ;;
     *)
       echo -e "\e[1;31mFAILURE\e[0m"
