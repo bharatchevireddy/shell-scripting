@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e 
+
 USER_ID=$(id -u)
 
 case $USER_ID in
