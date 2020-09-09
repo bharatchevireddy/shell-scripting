@@ -14,7 +14,7 @@ esac
 
 case $1 in
   frontend)
-    echo Installing Frontend
+    echo -e "\e[33m**************>>>>>>>>>>>>>>>>>>>>>Installing Frontend<<<<<<<<<<<<<<<<<<<<<<<<<<<****************\e[0m"
     yum install nginx -y
     ;;
   catalogue)
@@ -28,5 +28,6 @@ case $1 in
   *)
     echo "Invalid Input, Following inputs are only accepted"
     echo "Usage: $0 frontend|catalogue|cart"
+    exit 2
     ;;
 esac
