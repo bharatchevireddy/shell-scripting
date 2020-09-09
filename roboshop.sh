@@ -14,6 +14,10 @@ esac
 
 ## Functions
 
+Print() {
+  echo -e "\e[1;33m**************>>>>>>>>>>>>>>>>>>>>>  $1   <<<<<<<<<<<<<<<<<<<<<<<<<<<****************\e[0m"
+}
+
 Status_Check() {
   case $? in
     0)
@@ -30,10 +34,10 @@ Status_Check() {
 
 case $1 in
   frontend)
-    echo -e "\e[1;33m**************>>>>>>>>>>>>>>>>>>>>>  Installing Nginx   <<<<<<<<<<<<<<<<<<<<<<<<<<<****************\e[0m"
+    Print "Installing NGINX"
     yum install nginx -y
     Status_Check
-    echo -e "\e[1;33m**************>>>>>>>>>>>>>>>>>>>>>  Starting Nginx   <<<<<<<<<<<<<<<<<<<<<<<<<<<****************\e[0m"
+    Print "Starting Nginx"
     systemctl enable nginx
     systemctl start nginx
     Status_Check
