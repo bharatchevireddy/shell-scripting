@@ -15,7 +15,7 @@ esac
 case $1 in
   frontend)
     echo -e "\e[1;33m**************>>>>>>>>>>>>>>>>>>>>>  Installing Nginx   <<<<<<<<<<<<<<<<<<<<<<<<<<<****************\e[0m"
-     yum install nginxx -y
+     yum install jenkins -y
     echo -e "\e[1;33m**************>>>>>>>>>>>>>>>>>>>>>  Starting Nginx   <<<<<<<<<<<<<<<<<<<<<<<<<<<****************\e[0m"
 
     ;;
