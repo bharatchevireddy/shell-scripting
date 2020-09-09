@@ -8,7 +8,7 @@ case $USER_ID in
   ;;
   *)
     echo -e "\e[1;31mYou should be a root user to perform this script\e[0m"
-    exit 1
+    exit
     ;;
 esac
 
