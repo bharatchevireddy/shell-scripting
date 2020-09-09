@@ -20,7 +20,7 @@ Status_Check() {
       echo SUCCESS
       ;;
     *)
-      echo FAILURE
+      echo -e "\e[1;31mFAILURE\e[0m"
       exit 3
       ;;
   esac
