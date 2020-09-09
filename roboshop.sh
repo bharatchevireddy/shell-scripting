@@ -36,15 +36,7 @@ case $1 in
     echo -e "\e[1;33m**************>>>>>>>>>>>>>>>>>>>>>  Starting Nginx   <<<<<<<<<<<<<<<<<<<<<<<<<<<****************\e[0m"
     systemctl enable nginx
     systemctl start nginx
-    case $? in
-      0)
-        echo SUCCESS
-        ;;
-      *)
-        echo FAILURE
-        exit 3
-        ;;
-    esac
+    Status_Check
     ;;
   catalogue)
     echo Installing Catalogue
