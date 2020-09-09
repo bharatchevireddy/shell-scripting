@@ -13,4 +13,8 @@ case $1 in
     echo Installing Cart
     echo Completed Installing Cart
     ;;
+  *)
+    echo "Invalid Input, Following inputs are only accepted"
+    echo "Usage: $0 frontend|catalogue|cart"
+    ;;
 esac
