@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e 
-
 USER_ID=$(id -u)
 
 case $USER_ID in
@@ -18,8 +16,27 @@ case $1 in
   frontend)
     echo -e "\e[1;33m**************>>>>>>>>>>>>>>>>>>>>>  Installing Nginx   <<<<<<<<<<<<<<<<<<<<<<<<<<<****************\e[0m"
     yum install jenkins -y
+    case $? in
+      0)
+        echo SUCCESS
+        ;;
+      *)
+        echo FAILURE
+        exit 3
+        ;;
+    esac
     echo -e "\e[1;33m**************>>>>>>>>>>>>>>>>>>>>>  Starting Nginx   <<<<<<<<<<<<<<<<<<<<<<<<<<<****************\e[0m"
-
+    systemctl enable nginx
+    systemctl start nginx
+    case $? in
+      0)
+        echo SUCCESS
+        ;;
+      *)
+        echo FAILURE
+        exit 3
+        ;;
+    esac
     ;;
   catalogue)
     echo Installing Catalogue
