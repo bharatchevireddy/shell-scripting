@@ -61,9 +61,27 @@ case $1 in
     echo Installing Cart
     echo Completed Installing Cart
     ;;
+  mongodb)
+    echo '[mongodb-org-4.2]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/4.2/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc' >/etc/yum.repos.d/mongodb.repo
+    Print "Installing MongoDB"
+    yum install -y mongodb-org
+    Status_Check
+    Print "Update MongoDB Configuration"
+
+#    Print "Starting MongoDB Service"
+#    systemctl enable mongod
+#    systemctl start mongod
+#    Status_Check
+
+
   *)
     echo "Invalid Input, Following inputs are only accepted"
-    echo "Usage: $0 frontend|catalogue|cart"
+    echo "Usage: $0 frontend|catalogue|cart|mongodb"
     exit 2
     ;;
 esac
