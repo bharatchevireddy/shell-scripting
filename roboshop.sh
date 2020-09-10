@@ -1,6 +1,7 @@
 #!/bin/bash
 
 USER_ID=$(id -u)
+DNS_DOMAIN_NAME="devopsb51.tk"
 
 case $USER_ID in
   0)
@@ -53,7 +54,17 @@ Setup_NodeJS() {
   Print "Install NodeJS App dependencies"
   npm --unsafe-perm install
   Status_Check
-  chown roboshop:roboshop /home/roboshop -R 
+  chown roboshop:roboshop /home/roboshop -R
+  Print "Setup catalogue Service"
+  mv /home/roboshop/catalogue/systemd.service /etc/systemd/system/catalogue.service
+  sed -i -e "s/loacalhost/mongodb.${DNS_DOMAIN_NAME}/" /etc/systemd/system/catalogue.service
+  Status_Check
+  Print "Start Catalogue Service"
+  systemctl daemon-reload
+  systemctl enable catalogue
+  systemctl start catalogue
+  Status_Check
+
 }
 
 ### Main Program
