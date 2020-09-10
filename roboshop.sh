@@ -55,11 +55,11 @@ Setup_NodeJS() {
   npm --unsafe-perm install
   Status_Check
   chown roboshop:roboshop /home/roboshop -R
-  Print "Setup catalogue Service"
+  Print "Setup $1 Service"
   mv /home/roboshop/$1/systemd.service /etc/systemd/system/$1.service
   sed -i -e "s/localhost/mongodb.${DNS_DOMAIN_NAME}/" /etc/systemd/system/$1.service
   Status_Check
-  Print "Start Catalogue Service"
+  Print "Start $1 Service"
   systemctl daemon-reload
   systemctl enable $1
   systemctl start $1
