@@ -50,7 +50,6 @@ Setup_NodeJS() {
   mkdir -p /home/roboshop/$1
   cd /home/roboshop/$1
   unzip -o /tmp/$1.zip
-  exit 
   Status_Check
   Print "Install NodeJS App dependencies"
   npm --unsafe-perm install
