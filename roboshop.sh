@@ -77,7 +77,7 @@ gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc' >/etc/yum.repos.d/mong
 #    systemctl enable mongod
 #    systemctl start mongod
 #    Status_Check
-
+    ;;
 
   *)
     echo "Invalid Input, Following inputs are only accepted"
