@@ -45,6 +45,11 @@ Setup_NodeJS() {
   Print "Downloading Application"
   curl -s -L -o /tmp/$1.zip "$2"
   Status_Check
+  Print "Extracting Applciation Archive"
+  mkdir -p /home/roboshop/$1
+  cd /home/roboshop/$1
+  unzip /tmp/$1.zip
+  Status_Check
 }
 
 ### Main Program
