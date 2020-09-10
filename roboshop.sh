@@ -66,7 +66,6 @@ Setup_NodeJS() {
   systemctl enable $1
   systemctl start $1
   Status_Check
-
 }
 
 ### Main Program
