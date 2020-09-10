@@ -30,6 +30,15 @@ Status_Check() {
   esac
 }
 
+Setup_NodeJS() {
+  Print "Installing NodeJS"
+  yum install nodejs make gcc-c++ -y
+  Status_Check
+  Print "Add Application User"
+  useradd roboshop
+  Status_Check
+}
+
 ### Main Program
 
 case $1 in
@@ -55,7 +64,8 @@ case $1 in
     ;;
   catalogue)
     echo Installing Catalogue
-    echo Completed Installing  Catalogue
+    Setup_NodeJS
+    
     ;;
   cart)
     echo Installing Cart
