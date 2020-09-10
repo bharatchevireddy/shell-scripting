@@ -51,7 +51,7 @@ Setup_NodeJS() {
   unzip -o /tmp/$1.zip
   Status_Check
   Print "Install NodeJS App dependencies"
-  npm install
+  npm --unsafe-perm install
   Status_Check
 }
 
