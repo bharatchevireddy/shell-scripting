@@ -50,6 +50,7 @@ Setup_NodeJS() {
   mkdir -p /home/roboshop/$1
   cd /home/roboshop/$1
   unzip -o /tmp/$1.zip
+  exit 
   Status_Check
   Print "Install NodeJS App dependencies"
   npm --unsafe-perm install
@@ -57,7 +58,9 @@ Setup_NodeJS() {
   chown roboshop:roboshop /home/roboshop -R
   Print "Setup $1 Service"
   mv /home/roboshop/$1/systemd.service /etc/systemd/system/$1.service
-  sed -i -e "s/localhost/mongodb.${DNS_DOMAIN_NAME}/" /etc/systemd/system/$1.service
+  sed -i -e "s/MONGO_ENDPOINT/mongodb.${DNS_DOMAIN_NAME}/" /etc/systemd/system/$1.service
+  sed -i -e "s/REDIS_ENDPOINT/redis.${DNS_DOMAIN_NAME}/" /etc/systemd/system/$1.service
+  sed -i -e "s/CATALOGUE_ENDPOINT/catalogue.${DNS_DOMAIN_NAME}/" /etc/systemd/system/$1.service
   Status_Check
   Print "Start $1 Service"
   systemctl daemon-reload
