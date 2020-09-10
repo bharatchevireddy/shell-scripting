@@ -57,7 +57,7 @@ Setup_NodeJS() {
   chown roboshop:roboshop /home/roboshop -R
   Print "Setup catalogue Service"
   mv /home/roboshop/catalogue/systemd.service /etc/systemd/system/catalogue.service
-  sed -i -e "s/loacalhost/mongodb.${DNS_DOMAIN_NAME}/" /etc/systemd/system/catalogue.service
+  sed -i -e "s/localhost/mongodb.${DNS_DOMAIN_NAME}/" /etc/systemd/system/catalogue.service
   Status_Check
   Print "Start Catalogue Service"
   systemctl daemon-reload
