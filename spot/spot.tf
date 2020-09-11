@@ -23,7 +23,10 @@ EOF
     }
     inline = [
       "disable-auto-shutdown",
-      "set-hostname ${element(var.apps, count.index)}"
+      "set-hostname ${element(var.apps, count.index)}",
+      "cd /home/centos",
+      "git clone https://DevOps-Batches@dev.azure.com/DevOps-Batches/DevOps51/_git/shell-scripting",
+      "chown centos:centos shell-scripting -R"
     ]
   }
 }
