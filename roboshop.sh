@@ -86,11 +86,17 @@ case $1 in
     mv static/* .
     rm -rf static README.md
     mv localhost.conf /etc/nginx/nginx.conf
-    sed -i -e '/^#/ d' /etc/nginx/nginx.conf
 
-    for app in catalogue cart user shipping payment; do
-      sed -i "/proxy_http_version/ a location /api/$app { proxy_pass http://$app.$DNS_DOMAIN_NAME:8000 ; }"  /etc/nginx/nginx.conf
-    done
+#    for app in catalogue cart user shipping payment; do
+#      export
+#    done
+    export CATALOGUE=catalogue.${DNS_DOMAIN_NAME}
+    export CART=cart.${DNS_DOMAIN_NAME}
+    export USER=user.${DNS_DOMAIN_NAME}
+    export SHIPPING=shipping.${DNS_DOMAIN_NAME}
+    export PAYMENT=payment.${DNS_DOMAIN_NAME}
+
+    envsubst < template.conf > /etc/nginx/nginx.conf
 
     Print "Starting Nginx"
     systemctl enable nginx
