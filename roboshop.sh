@@ -94,7 +94,7 @@ case $1 in
 
     Print "Starting Nginx"
     systemctl enable nginx
-    systemctl start nginx
+    systemctl restart nginx
     Status_Check
     ;;
   catalogue)
