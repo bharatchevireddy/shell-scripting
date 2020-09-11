@@ -89,7 +89,7 @@ case $1 in
     sed -i -e '/^#/ d' /etc/nginx/nginx.conf
 
     for app in catalogue cart user shipping payment; do
-      sed -i "/proxy_http_version/ a \ \tlocation /api/$app { proxy_pass http://$app.$DNS_DOMAIN_NAME:8000 ; }"  /etc/nginx/nginx.conf
+      sed -i "/proxy_http_version/ a location /api/$app { proxy_pass http://$app.$DNS_DOMAIN_NAME:8000 ; }"  /etc/nginx/nginx.conf
     done
 
     Print "Starting Nginx"
