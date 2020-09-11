@@ -86,6 +86,7 @@ case $1 in
     mv static/* .
     rm -rf static README.md
     mv localhost.conf /etc/nginx/nginx.conf
+    sed -i -e '/^#/ d' /etc/nginx/nginx.conf
     Print "Starting Nginx"
     systemctl enable nginx
     systemctl start nginx
