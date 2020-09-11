@@ -3,10 +3,6 @@ resource "aws_spot_instance_request" "cheap_worker" {
   ami           = data.aws_ami.ami.id
   spot_price    = "0.005"
   instance_type = "t3.micro"
-
-  tags = {
-    Name = "frontend"
-  }
 }
 
 resource "null_resource" "cli" {
