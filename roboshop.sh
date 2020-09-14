@@ -210,9 +210,16 @@ MYSQL() {
   Print "Start MySQL"
   systemctl start mysqld
   Status_Check
-  echo -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'Password@1';\nuninstall plugin validate_password;\nALTER USER 'root'@'localhost' IDENTIFIED BY 'password';" >/tmp/reset-password.sql
-  ROOT_PASSWORD=$(grep 'A temporary password' /var/log/mysqld.log | awk '{print $NF}')
-  mysql -uroot -p"${ROOT_PASSWORD}" < /tmp/reset-password.sql
+  echo 'show databases;' | mysql -uroot -ppassword
+  case $? in
+    1)
+      echo -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'Password@1';\nuninstall plugin validate_password;\nALTER USER 'root'@'localhost' IDENTIFIED BY 'password';" >/tmp/reset-password.sql
+      ROOT_PASSWORD=$(grep 'A temporary password' /var/log/mysqld.log | awk '{print $NF}')
+      Print "Reset MySQL Password"
+      mysql -uroot -p"${ROOT_PASSWORD}" < /tmp/reset-password.sql
+      Status_Check
+    ;;
+  esac
 }
 
 ### Main Program
