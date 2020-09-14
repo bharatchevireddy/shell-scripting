@@ -191,7 +191,7 @@ gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc' >/etc/yum.repos.d/mong
     mv /home/roboshop/shipping/systemd.service /etc/systemd/system/shipping.service
     sed -i -e "s/CARTENDPOINT/cart.${DNS_DOMAIN_NAME}/" /etc/systemd/system/shipping.service
     sed -i -e "s/DBHOST/mysql.${DNS_DOMAIN_NAME}/" /etc/systemd/system/shipping.service
-    sytemctl daemon-reload
+    systemctl daemon-reload
     systemctl enable shipping
     Print "Start Service"
     systemctl start shipping
