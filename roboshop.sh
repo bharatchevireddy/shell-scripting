@@ -252,6 +252,7 @@ PAYMENT() {
   Status_Check
   chown roboshop:roboshop /home/roboshop -R
   mv /home/roboshop/payment/systemd.service /etc/systemd/system/payment.service
+  sed -i -e "s/CARTHOST/cart.${DNS_DOMAIN_NAME}/" -e "s/USERHOST/user.${DNS_DOMAIN_NAME}/" -e "s/AMQPHOST/rabbitmq.${DNS_DOMAIN_NAME}/" /etc/systemd/system/payment.service
   systemctl daemon-reload
   systemctl enable payment
   Print "Start Payment Service"
