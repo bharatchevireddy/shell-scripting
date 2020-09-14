@@ -187,20 +187,25 @@ gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc' >/etc/yum.repos.d/mong
 }
 
 MYSQL() {
-  Print "Download MySQL"
-  curl -L -o /tmp/mysql-5.7.28-1.el7.x86_64.rpm-bundle.tar https://downloads.mysql.com/archives/get/p/23/file/mysql-5.7.28-1.el7.x86_64.rpm-bundle.tar
-  Status_Check
-  cd /tmp
-  Print "Extract Archive"
-  tar -xf mysql-5.7.28-1.el7.x86_64.rpm-bundle.tar
-  Status_Check
-  yum remove mariadb-libs -y
-  Print "Install MySQL"
-  yum install mysql-community-client-5.7.28-1.el7.x86_64.rpm \
+  yum list installed | grep mysql-community-server
+  case $? in
+    1)
+    Print "Download MySQL"
+    curl -L -o /tmp/mysql-5.7.28-1.el7.x86_64.rpm-bundle.tar https://downloads.mysql.com/archives/get/p/23/file/mysql-5.7.28-1.el7.x86_64.rpm-bundle.tar
+    Status_Check
+    cd /tmp
+    Print "Extract Archive"
+    tar -xf mysql-5.7.28-1.el7.x86_64.rpm-bundle.tar
+    Status_Check
+    yum remove mariadb-libs -y
+    Print "Install MySQL"
+    yum install mysql-community-client-5.7.28-1.el7.x86_64.rpm \
               mysql-community-common-5.7.28-1.el7.x86_64.rpm \
               mysql-community-libs-5.7.28-1.el7.x86_64.rpm \
               mysql-community-server-5.7.28-1.el7.x86_64.rpm -y
-  Status_Check
+    Status_Check
+    ;;
+  esac
   systemctl enable mysqld
   Print "Start MySQL"
   systemctl start mysqld
