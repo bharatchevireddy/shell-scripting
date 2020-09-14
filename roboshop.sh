@@ -126,7 +126,13 @@ case $1 in
     Print "Install Redis"
     yum install redis -y
     Status_Check
-    
+    Print "Update Configuration"
+    sed -i -e '/^bind 127.0.0.1/ c bind 0.0.0.0' /etc/redis.conf
+    Status_Check
+    Print "Start Service"
+    systemctl enable redis
+    systemctl start redis
+    Status_Check
     ;;
   mongodb)
     echo '[mongodb-org-4.2]
