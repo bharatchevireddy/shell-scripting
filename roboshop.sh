@@ -225,7 +225,7 @@ MYSQL() {
   Status_Check
   Print "Extract Schema"
   cd /tmp
-  unzip mysql.zip
+  unzip -o mysql.zip
   Status_Check
   Print "Load Schema"
   mysql -u root -ppassword <shipping.sql
