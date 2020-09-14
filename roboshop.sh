@@ -72,10 +72,36 @@ Setup_NodeJS() {
   Status_Check
 }
 
-### Main Program
+SHIPPING() {
+    Print "Install Maven "
+    yum install maven -y
+    Status_Check
+    Create_AppUser
+    cd /home/roboshop
+    Print "Downloading Application"
+    curl -s -L -o /tmp/shipping.zip "https://dev.azure.com/DevOps-Batches/ce99914a-0f7d-4c46-9ccc-e4d025115ea9/_apis/git/repositories/e13afea5-9e0d-4698-b2f9-ed853c78ccc7/items?path=%2F&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=zip&api-version=5.0&download=true"
+    Status_Check
+    mkdir shipping
+    cd shipping
+    Print "Extracting Archive"
+    unzip /tmp/shipping.zip
+    Status_Check
+    Print "Install Dependencies"
+    mvn clean package
+    Status_Check
+    mv target/*dependencies.jar shipping.jar
+    chown roboshop:roboshop /home/roboshop -R
+    mv /home/roboshop/shipping/systemd.service /etc/systemd/system/shipping.service
+    sed -i -e "s/CARTENDPOINT/cart.${DNS_DOMAIN_NAME}/" /etc/systemd/system/shipping.service
+    sed -i -e "s/DBHOST/mysql.${DNS_DOMAIN_NAME}/" /etc/systemd/system/shipping.service
+    systemctl daemon-reload
+    systemctl enable shipping
+    Print "Start Service"
+    systemctl start shipping
+    Status_Check
+}
 
-case $1 in
-  frontend)
+FRONTEND() {
     Print "Installing NGINX"
     yum install nginx -y
     Status_Check
@@ -106,20 +132,9 @@ case $1 in
     systemctl enable nginx
     systemctl restart nginx
     Status_Check
-    ;;
-  catalogue)
-    echo Installing Catalogue
-    Setup_NodeJS "catalogue" "https://dev.azure.com/DevOps-Batches/ce99914a-0f7d-4c46-9ccc-e4d025115ea9/_apis/git/repositories/558568c8-174a-4076-af6c-51bf129e93bb/items?path=%2F&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=zip&api-version=5.0&download=true"
-    ;;
-  cart)
-    echo Installing Cart
-    Setup_NodeJS "cart" "https://dev.azure.com/DevOps-Batches/ce99914a-0f7d-4c46-9ccc-e4d025115ea9/_apis/git/repositories/ac4e5cc0-c297-4230-956c-ba8ebb00ce2d/items?path=%2F&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=zip&api-version=5.0&download=true"
-    ;;
-  user)
-    echo Installing User
-    Setup_NodeJS "user" "https://dev.azure.com/DevOps-Batches/ce99914a-0f7d-4c46-9ccc-e4d025115ea9/_apis/git/repositories/e911c2cd-340f-4dc6-a688-5368e654397c/items?path=%2F&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=zip&api-version=5.0&download=true"
-    ;;
-  redis)
+}
+
+REDIS() {
     echo Installing Redis
     Print "Install Yum Utils"
     yum install epel-release yum-utils http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y
@@ -137,8 +152,9 @@ case $1 in
     systemctl enable redis
     systemctl start redis
     Status_Check
-    ;;
-  mongodb)
+}
+
+MONGO() {
     echo '[mongodb-org-4.2]
 name=MongoDB Repository
 baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/4.2/x86_64/
@@ -168,39 +184,64 @@ gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc' >/etc/yum.repos.d/mong
     Print "Load Users Schema"
     mongo <users.js
     Status_Check
+}
+
+MYSQL() {
+  Print "Download MySQL"
+  curl -L -o /tmp/mysql-5.7.28-1.el7.x86_64.rpm-bundle.tar https://downloads.mysql.com/archives/get/p/23/file/mysql-5.7.28-1.el7.x86_64.rpm-bundle.tar
+  Status_Check
+  cd /tmp
+  Print "Extract Archive"
+  tar -xf mysql-5.7.28-1.el7.x86_64.rpm-bundle.tar
+  Status_Check
+  yum remove mariadb-libs -y
+  Print "Install MySQL"
+  yum install mysql-community-client-5.7.28-1.el7.x86_64.rpm \
+              mysql-community-common-5.7.28-1.el7.x86_64.rpm \
+              mysql-community-libs-5.7.28-1.el7.x86_64.rpm \
+              mysql-community-server-5.7.28-1.el7.x86_64.rpm -y
+  Status_Check
+  systemctl enable mysqld
+  Print "Start MySQL"
+  systemctl start mysqld
+  Status_Check
+
+}
+
+### Main Program
+
+case $1 in
+  frontend)
+    FRONTEND
+    ;;
+  catalogue)
+    echo Installing Catalogue
+    Setup_NodeJS "catalogue" "https://dev.azure.com/DevOps-Batches/ce99914a-0f7d-4c46-9ccc-e4d025115ea9/_apis/git/repositories/558568c8-174a-4076-af6c-51bf129e93bb/items?path=%2F&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=zip&api-version=5.0&download=true"
+    ;;
+  cart)
+    echo Installing Cart
+    Setup_NodeJS "cart" "https://dev.azure.com/DevOps-Batches/ce99914a-0f7d-4c46-9ccc-e4d025115ea9/_apis/git/repositories/ac4e5cc0-c297-4230-956c-ba8ebb00ce2d/items?path=%2F&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=zip&api-version=5.0&download=true"
+    ;;
+  user)
+    echo Installing User
+    Setup_NodeJS "user" "https://dev.azure.com/DevOps-Batches/ce99914a-0f7d-4c46-9ccc-e4d025115ea9/_apis/git/repositories/e911c2cd-340f-4dc6-a688-5368e654397c/items?path=%2F&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=zip&api-version=5.0&download=true"
+    ;;
+  redis)
+    REDIS
+    ;;
+  mongodb)
+    MONGO
     ;;
   shipping)
-    Print "Install Maven "
-    yum install maven -y
-    Status_Check
-    Create_AppUser
-    cd /home/roboshop
-    Print "Downloading Application"
-    curl -s -L -o /tmp/shipping.zip "https://dev.azure.com/DevOps-Batches/ce99914a-0f7d-4c46-9ccc-e4d025115ea9/_apis/git/repositories/e13afea5-9e0d-4698-b2f9-ed853c78ccc7/items?path=%2F&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=zip&api-version=5.0&download=true"
-    Status_Check
-    mkdir shipping
-    cd shipping
-    Print "Extracting Archive"
-    unzip /tmp/shipping.zip
-    Status_Check
-    Print "Install Dependencies"
-    mvn clean package
-    Status_Check
-    mv target/*dependencies.jar shipping.jar
-    chown roboshop:roboshop /home/roboshop -R
-    mv /home/roboshop/shipping/systemd.service /etc/systemd/system/shipping.service
-    sed -i -e "s/CARTENDPOINT/cart.${DNS_DOMAIN_NAME}/" /etc/systemd/system/shipping.service
-    sed -i -e "s/DBHOST/mysql.${DNS_DOMAIN_NAME}/" /etc/systemd/system/shipping.service
-    systemctl daemon-reload
-    systemctl enable shipping
-    Print "Start Service"
-    systemctl start shipping
-    Status_Check
+    SHIPPING
+    ;;
+  mysql)
+    MYSQL
     ;;
 
   *)
     echo "Invalid Input, Following inputs are only accepted"
-    echo "Usage: $0 frontend|catalogue|cart|mongodb|redis|shipping"
+    echo "Usage: $0 frontend|catalogue|cart|mongodb|redis|shipping|mysql"
     exit 2
     ;;
 esac
