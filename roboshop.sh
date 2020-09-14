@@ -85,7 +85,7 @@ case $1 in
     Status_Check
     mv static/* .
     rm -rf static README.md
-    mv localhost.conf /etc/nginx/nginx.conf
+    mv template.conf /etc/nginx/nginx.conf
 
 #    for app in catalogue cart user shipping payment; do
 #      export
