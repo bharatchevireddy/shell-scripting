@@ -259,6 +259,31 @@ PAYMENT() {
   Status_Check
 }
 
+RABBITMQ() {
+  Print "Install ErLang"
+  yum install https://packages.erlang-solutions.com/erlang/rpm/centos/7/x86_64/esl-erlang_22.2.1-1~centos~7_amd64.rpm -y
+  Status_Check
+
+  Print "Install RabbitMQ repos"
+  curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.rpm.sh | sudo bash
+  Status_Check
+
+  Print "Install RabbitMQ Server"
+  yum install rabbitmq-server -y
+  Status_Check
+
+  Print "Start RabbitMQ Server"
+  systemctl enable rabbitmq-server
+  systemctl start rabbitmq-server
+  Status_Check
+
+  Print "Create App User in RabbitMQ"
+  rabbitmqctl add_user roboshop roboshop123
+  rabbitmqctl set_user_tags roboshop administrator
+  rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"
+  Status_Check
+}
+
 ### Main Program
 
 case $1 in
@@ -292,7 +317,9 @@ case $1 in
   payment)
     PAYMENT
     ;;
-
+  rabbitmq)
+    RABBITMQ
+    ;;
   *)
     echo "Invalid Input, Following inputs are only accepted"
     echo "Usage: $0 frontend|catalogue|cart|mongodb|redis|shipping|mysql"
