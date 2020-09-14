@@ -31,10 +31,7 @@ Status_Check() {
   esac
 }
 
-Setup_NodeJS() {
-  Print "Installing NodeJS"
-  yum install nodejs make gcc-c++ -y
-  Status_Check
+Create_AppUser() {
   id roboshop
   case $? in
     1)
@@ -43,6 +40,13 @@ Setup_NodeJS() {
       Status_Check
     ;;
   esac
+}
+
+Setup_NodeJS() {
+  Print "Installing NodeJS"
+  yum install nodejs make gcc-c++ -y
+  Status_Check
+  Create_AppUser
   Print "Downloading Application"
   curl -s -L -o /tmp/$1.zip "$2"
   Status_Check
@@ -164,12 +168,39 @@ gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc' >/etc/yum.repos.d/mong
     Print "Load Users Schema"
     mongo <users.js
     Status_Check
-
+    ;;
+  shipping)
+    Print "Install Maven "
+    yum install maven -y
+    Status_Check
+    Create_AppUser
+    cd /home/roboshop
+    Print "Downloading Application"
+    curl -s -L -o /tmp/shipping.zip "https://dev.azure.com/DevOps-Batches/ce99914a-0f7d-4c46-9ccc-e4d025115ea9/_apis/git/repositories/e13afea5-9e0d-4698-b2f9-ed853c78ccc7/items?path=%2F&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=zip&api-version=5.0&download=true"
+    Status_Check
+    mkdir shipping
+    cd shipping
+    Print "Extracting Archive"
+    unzip /tmp/shipping.zip
+    Status_Check
+    Print "Install Dependencies"
+    mvn clean package
+    Status_Check
+    mv target/*dependencies.jar shipping.jar
+    chown roboshop:roboshop /home/roboshop -R
+    mv /home/roboshop/shipping/systemd.service /etc/systemd/system/shipping.service
+    sed -i -e "s/CARTENDPOINT/cart.${DNS_DOMAIN_NAME}/" /etc/systemd/system/shipping.service
+    sed -i -e "s/DBHOST/mysql.${DNS_DOMAIN_NAME}/" /etc/systemd/system/shipping.service
+    sytemctl daemon-reload
+    systemctl enable shipping
+    Print "Start Service"
+    systemctl start shipping
+    Status_Check
     ;;
 
   *)
     echo "Invalid Input, Following inputs are only accepted"
-    echo "Usage: $0 frontend|catalogue|cart|mongodb|redis"
+    echo "Usage: $0 frontend|catalogue|cart|mongodb|redis|shipping"
     exit 2
     ;;
 esac
