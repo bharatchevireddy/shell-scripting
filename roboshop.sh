@@ -33,13 +33,11 @@ Status_Check() {
 
 Create_AppUser() {
   id roboshop
-  case $? in
-    1)
+  if [ $? -ne 0 ]; then
       Print "Add Application User"
       useradd roboshop
       Status_Check
-    ;;
-  esac
+  fi
 }
 
 Setup_NodeJS() {
@@ -126,7 +124,9 @@ FRONTEND() {
     export SHIPPING=shipping.${DNS_DOMAIN_NAME}
     export PAYMENT=payment.${DNS_DOMAIN_NAME}
 
-    sed -i -e "s/CATALOGUE/${CATALOGUE}/" -e "s/CART/${CART}/" -e "s/USER/${USER}/" -e "s/SHIPPING/${SHIPPING}/" -e "s/PAYMENT/${PAYMENT}/" /etc/nginx/nginx.conf
+    if [ -e /etc/nginx/nginx.conf ]; then
+      sed -i -e "s/CATALOGUE/${CATALOGUE}/" -e "s/CART/${CART}/" -e "s/USER/${USER}/" -e "s/SHIPPING/${SHIPPING}/" -e "s/PAYMENT/${PAYMENT}/" /etc/nginx/nginx.conf
+    fi
 
     Print "Starting Nginx"
     systemctl enable nginx
@@ -146,7 +146,9 @@ REDIS() {
     yum install redis -y
     Status_Check
     Print "Update Configuration"
-    sed -i -e '/^bind 127.0.0.1/ c bind 0.0.0.0' /etc/redis.conf
+    if [ -e /etc/redis.conf ]; then
+      sed -i -e '/^bind 127.0.0.1/ c bind 0.0.0.0' /etc/redis.conf
+    fi
     Status_Check
     Print "Start Service"
     systemctl enable redis
@@ -188,8 +190,7 @@ gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc' >/etc/yum.repos.d/mong
 
 MYSQL() {
   yum list installed | grep mysql-community-server
-  case $? in
-    1)
+  if [ $? -ne 0 ]; then
     Print "Download MySQL"
     curl -L -o /tmp/mysql-5.7.28-1.el7.x86_64.rpm-bundle.tar https://downloads.mysql.com/archives/get/p/23/file/mysql-5.7.28-1.el7.x86_64.rpm-bundle.tar
     Status_Check
@@ -204,22 +205,19 @@ MYSQL() {
               mysql-community-libs-5.7.28-1.el7.x86_64.rpm \
               mysql-community-server-5.7.28-1.el7.x86_64.rpm -y
     Status_Check
-    ;;
-  esac
+  fi
   systemctl enable mysqld
   Print "Start MySQL"
   systemctl start mysqld
   Status_Check
   echo 'show databases;' | mysql -uroot -ppassword
-  case $? in
-    1)
+  if [ $? -ne 0 ]; then
       echo -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'Password@1';\nuninstall plugin validate_password;\nALTER USER 'root'@'localhost' IDENTIFIED BY 'password';" >/tmp/reset-password.sql
       ROOT_PASSWORD=$(grep 'A temporary password' /var/log/mysqld.log | awk '{print $NF}')
       Print "Reset MySQL Password"
       mysql -uroot -p"${ROOT_PASSWORD}" < /tmp/reset-password.sql
       Status_Check
-    ;;
-  esac
+  fi
   Print "Download Schema"
   curl -s -L -o /tmp/mysql.zip "https://dev.azure.com/DevOps-Batches/ce99914a-0f7d-4c46-9ccc-e4d025115ea9/_apis/git/repositories/af9ec0c1-9056-4c0e-8ea3-76a83aa36324/items?path=%2F&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&resolveLfs=true&%24format=zip&api-version=5.0&download=true"
   Status_Check
@@ -286,6 +284,26 @@ RABBITMQ() {
 }
 
 ### Main Program
+
+## Check whether it is a Linux Box
+UNAME=$(uname)
+
+if [ "${UNAME}" != "Linux" ]; then
+  echo "Unsupported OS!!"
+  exit 10
+fi
+
+OS=$(cat /etc/os-release  | grep -w ID= |awk -F = '{print $2}'|xargs)
+VERSION=$(cat /etc/os-release  | grep -w VERSION_ID | awk -F = '{print $2}' |xargs)
+
+if [ "$OS" == "centos" -a $VERSION -eq 7 ]; then
+  echo "OS Checks - PASSED"
+else
+  echo "OS Checks - FAILED"
+  echo "Unsupported OS!!!"
+  echo "Supports only CentOS 7"
+  exit 10 
+fi
 
 case $1 in
   frontend)
