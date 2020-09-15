@@ -302,7 +302,7 @@ else
   echo "OS Checks - FAILED"
   echo "Unsupported OS!!!"
   echo "Supports only CentOS 7"
-  exit 10 
+  exit 10
 fi
 
 case $1 in
