@@ -1,8 +1,8 @@
 resource "aws_spot_instance_request" "cheap_worker" {
   count         = length(var.apps)
   ami           = data.aws_ami.ami.id
-  spot_price    = "0.005"
-  instance_type = "t3.micro"
+  spot_price    = "0.03"
+  instance_type = "r5.large"
 }
 
 resource "null_resource" "cli" {
@@ -39,11 +39,15 @@ owners           = ["973714476881"]
 }
 
 provider "aws" {
-  region = "us-east-2"
+  region = "us-east-1"
 }
 
+// variable "apps" {
+//   default = ["frontend", "catalogue", "cart", "user", "shipping", "payment", "mongodb", "mysql", "rabbitmq", "redis"]
+// }
+
 variable "apps" {
-  default = ["frontend", "catalogue", "cart", "user", "shipping", "payment", "mongodb", "mysql", "rabbitmq", "redis"]
+  default= ["ELK"]
 }
 
 resource "aws_security_group" "aa" {
